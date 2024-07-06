@@ -1,0 +1,11 @@
+{
+    "min_position" : "-50",
+    "max_position" : "50",
+    "min_v" : "-60",
+    "max_v" : "60",
+    "min_a" : "-120",
+    "max_a" : "120",
+    "min_j" : "-480",
+    "max_j" : "480",
+    "reward_scale" : "11"
+}
