@@ -1,0 +1,4 @@
+{
+    "reward": "data/reward.txt",
+    "preprocess_data": "preprocessed_data"
+}
