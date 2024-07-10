@@ -1,0 +1,724 @@
+Args in experiment:
+Namespace(activation='gelu', anomaly_ratio=0.25, batch_size=32, c_out=7, checkpoints='./checkpoints/', d_ff=2048, d_layers=1, d_model=512, data='Ours data', data_path='ETTh1.csv', dec_in=7, depth=4, des='test', devices='0,1,2,3', dim=128, distil=True, dropout=0.1, e_layers=2, embed='timeF', enc_in=7, epochs=500, eval_save_frq=10, factor=1, features='M', freq='h', gpu=0, inverse=False, is_training=1, itr=1, label_len=48, learning_rate=1e-05, loss='MSE', lradj='type1', mask_rate=0.25, model='iTransformer', model_id='test', model_name='Baseline_vanilla_mlp', moving_avg=25, n_heads=8, num_class=4, num_kernels=6, num_workers=10, output_attention=True, p_hidden_dims=[128, 128], p_hidden_layers=2, patience=3, pred_len=96, root_path='./data/ETT/', seasonal_patterns='Monthly', seq_len=300, target='OT', task_name='classification', tasks=[3, 3, 2, 4], top_k=5, train_epochs=10, use_amp=False, use_gpu=False, use_multi_gpu=False)
+
+ <class 'layers.Model.Baseline_vanilla_mlp'>
+Baseline_vanilla_mlp(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Vanilla_Mlp(
+      (tb): ModuleDict(
+        (0): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (1): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (2): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (3): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (maxpool): MaxPool1d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    )
+  )
+)
+2024-07-01 06:08:27	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [010/500] Loss: 1.2691 Acc: [0.646, 0.641, 0.761, 0.383]
+2024-07-01 06:08:42	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [020/500] Loss: 1.1505 Acc: [0.694, 0.617, 0.761, 0.388]
+2024-07-01 06:08:57	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [030/500] Loss: 1.0582 Acc: [0.703, 0.665, 0.761, 0.435]
+2024-07-01 06:09:13	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [040/500] Loss: 0.9669 Acc: [0.708, 0.67, 0.766, 0.474]
+2024-07-01 06:09:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [050/500] Loss: 0.9267 Acc: [0.737, 0.694, 0.77, 0.483]
+2024-07-01 06:09:43	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [060/500] Loss: 0.8686 Acc: [0.684, 0.722, 0.77, 0.512]
+2024-07-01 06:09:58	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [070/500] Loss: 0.8602 Acc: [0.684, 0.77, 0.718, 0.665]
+2024-07-01 06:10:13	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [080/500] Loss: 0.5061 Acc: [0.751, 0.746, 0.727, 0.589]
+2024-07-01 06:10:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [090/500] Loss: 0.3176 Acc: [0.746, 0.708, 0.799, 0.598]
+2024-07-01 06:10:43	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [100/500] Loss: 0.2944 Acc: [0.766, 0.718, 0.799, 0.612]
+2024-07-01 06:10:59	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [110/500] Loss: 0.1758 Acc: [0.77, 0.746, 0.823, 0.612]
+2024-07-01 06:11:14	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [120/500] Loss: 0.1889 Acc: [0.804, 0.77, 0.866, 0.608]
+2024-07-01 06:11:29	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [130/500] Loss: 0.1051 Acc: [0.823, 0.77, 0.88, 0.622]
+2024-07-01 06:11:44	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [140/500] Loss: 0.0923 Acc: [0.818, 0.761, 0.856, 0.656]
+2024-07-01 06:11:59	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [150/500] Loss: 0.0538 Acc: [0.809, 0.742, 0.837, 0.708]
+2024-07-01 06:12:14	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [160/500] Loss: 0.0475 Acc: [0.794, 0.708, 0.89, 0.766]
+2024-07-01 06:12:29	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [170/500] Loss: 0.0320 Acc: [0.804, 0.746, 0.919, 0.813]
+2024-07-01 06:12:45	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [180/500] Loss: 0.0218 Acc: [0.842, 0.785, 0.856, 0.742]
+2024-07-01 06:13:00	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [190/500] Loss: 0.0108 Acc: [0.847, 0.756, 0.88, 0.756]
+2024-07-01 06:13:15	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [200/500] Loss: 0.0157 Acc: [0.866, 0.809, 0.861, 0.737]
+2024-07-01 06:13:30	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [210/500] Loss: 0.0077 Acc: [0.866, 0.809, 0.866, 0.675]
+2024-07-01 06:13:45	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [220/500] Loss: 0.0034 Acc: [0.876, 0.837, 0.885, 0.675]
+2024-07-01 06:14:00	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [230/500] Loss: 0.0029 Acc: [0.89, 0.804, 0.88, 0.756]
+2024-07-01 06:14:16	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [240/500] Loss: 0.0262 Acc: [0.876, 0.794, 0.876, 0.799]
+2024-07-01 06:14:31	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [250/500] Loss: 0.0692 Acc: [0.89, 0.799, 0.909, 0.775]
+2024-07-01 06:14:46	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [260/500] Loss: 0.0005 Acc: [0.9, 0.861, 0.876, 0.718]
+2024-07-01 06:15:01	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [270/500] Loss: 0.0019 Acc: [0.909, 0.861, 0.89, 0.761]
+2024-07-01 06:15:16	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [280/500] Loss: 0.0124 Acc: [0.923, 0.866, 0.919, 0.742]
+2024-07-01 06:15:31	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [290/500] Loss: 0.0020 Acc: [0.904, 0.847, 0.919, 0.804]
+2024-07-01 06:15:47	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [300/500] Loss: 0.0017 Acc: [0.914, 0.88, 0.842, 0.809]
+2024-07-01 06:16:02	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [310/500] Loss: 0.0001 Acc: [0.933, 0.856, 0.837, 0.761]
+2024-07-01 06:16:17	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [320/500] Loss: 0.0005 Acc: [0.914, 0.852, 0.856, 0.761]
+2024-07-01 06:16:32	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [330/500] Loss: 0.0046 Acc: [0.919, 0.871, 0.813, 0.77]
+2024-07-01 06:16:47	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [340/500] Loss: 0.0012 Acc: [0.914, 0.876, 0.775, 0.775]
+2024-07-01 06:17:02	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [350/500] Loss: 0.0005 Acc: [0.89, 0.847, 0.761, 0.78]
+2024-07-01 06:17:18	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [360/500] Loss: 0.0001 Acc: [0.919, 0.89, 0.861, 0.794]
+2024-07-01 06:17:33	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [370/500] Loss: 0.0002 Acc: [0.919, 0.871, 0.818, 0.799]
+2024-07-01 06:17:48	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [380/500] Loss: 0.0000 Acc: [0.89, 0.833, 0.837, 0.804]
+2024-07-01 06:18:04	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [390/500] Loss: 0.0003 Acc: [0.914, 0.909, 0.799, 0.78]
+2024-07-01 06:18:20	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [400/500] Loss: 0.0000 Acc: [0.943, 0.928, 0.742, 0.766]
+2024-07-01 06:18:35	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [410/500] Loss: 0.0001 Acc: [0.933, 0.904, 0.818, 0.794]
+2024-07-01 06:18:50	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [420/500] Loss: 0.0001 Acc: [0.919, 0.871, 0.885, 0.794]
+2024-07-01 06:19:05	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [430/500] Loss: 0.0003 Acc: [0.909, 0.89, 0.847, 0.78]
+2024-07-01 06:19:20	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [440/500] Loss: 0.0002 Acc: [0.914, 0.818, 0.933, 0.799]
+2024-07-01 06:19:35	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [450/500] Loss: 0.0000 Acc: [0.928, 0.904, 0.823, 0.785]
+2024-07-01 06:19:51	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [460/500] Loss: 0.0001 Acc: [0.914, 0.909, 0.823, 0.799]
+2024-07-01 06:20:06	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [470/500] Loss: 0.0001 Acc: [0.909, 0.928, 0.809, 0.756]
+2024-07-01 06:20:21	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [480/500] Loss: 0.0001 Acc: [0.919, 0.895, 0.828, 0.756]
+2024-07-01 06:20:37	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [490/500] Loss: 0.0001 Acc: [0.909, 0.909, 0.871, 0.766]
+2024-07-01 06:20:52	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [0] Epoch [500/500] Loss: 0.0000 Acc: [0.914, 0.9, 0.842, 0.751]
+mean acc: 0.7047847
+mean f1: 0.6949288670605117
+Baseline_vanilla_mlp(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Vanilla_Mlp(
+      (tb): ModuleDict(
+        (0): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (1): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (2): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (3): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (maxpool): MaxPool1d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    )
+  )
+)
+2024-07-01 06:21:08	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [010/500] Loss: 1.2616 Acc: [0.632, 0.598, 0.775, 0.364]
+2024-07-01 06:21:23	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [020/500] Loss: 1.1270 Acc: [0.66, 0.627, 0.775, 0.411]
+2024-07-01 06:21:38	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [030/500] Loss: 1.0019 Acc: [0.66, 0.646, 0.775, 0.411]
+2024-07-01 06:21:53	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [040/500] Loss: 0.9016 Acc: [0.684, 0.603, 0.718, 0.455]
+2024-07-01 06:22:09	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [050/500] Loss: 0.8287 Acc: [0.627, 0.636, 0.718, 0.565]
+2024-07-01 06:22:24	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [060/500] Loss: 0.7211 Acc: [0.603, 0.703, 0.545, 0.569]
+2024-07-01 06:22:39	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [070/500] Loss: 0.6219 Acc: [0.656, 0.699, 0.483, 0.651]
+2024-07-01 06:22:54	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [080/500] Loss: 0.4243 Acc: [0.617, 0.732, 0.512, 0.636]
+2024-07-01 06:23:09	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [090/500] Loss: 0.3065 Acc: [0.656, 0.78, 0.526, 0.646]
+2024-07-01 06:23:25	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [100/500] Loss: 0.2113 Acc: [0.656, 0.727, 0.373, 0.636]
+2024-07-01 06:23:40	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [110/500] Loss: 0.1232 Acc: [0.665, 0.77, 0.493, 0.679]
+2024-07-01 06:23:55	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [120/500] Loss: 0.0983 Acc: [0.732, 0.775, 0.612, 0.694]
+2024-07-01 06:24:10	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [130/500] Loss: 0.0584 Acc: [0.746, 0.756, 0.689, 0.722]
+2024-07-01 06:24:26	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [140/500] Loss: 0.0556 Acc: [0.727, 0.804, 0.727, 0.722]
+2024-07-01 06:24:41	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [150/500] Loss: 0.0326 Acc: [0.775, 0.823, 0.636, 0.737]
+2024-07-01 06:24:56	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [160/500] Loss: 0.0274 Acc: [0.756, 0.856, 0.699, 0.718]
+2024-07-01 06:25:11	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [170/500] Loss: 0.0223 Acc: [0.804, 0.856, 0.713, 0.746]
+2024-07-01 06:25:26	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [180/500] Loss: 0.0089 Acc: [0.813, 0.813, 0.632, 0.722]
+2024-07-01 06:25:42	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [190/500] Loss: 0.0079 Acc: [0.818, 0.833, 0.627, 0.761]
+2024-07-01 06:25:57	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [200/500] Loss: 0.0065 Acc: [0.842, 0.89, 0.708, 0.775]
+2024-07-01 06:26:12	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [210/500] Loss: 0.0021 Acc: [0.856, 0.895, 0.694, 0.785]
+2024-07-01 06:26:27	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [220/500] Loss: 0.0041 Acc: [0.847, 0.856, 0.641, 0.78]
+2024-07-01 06:26:42	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [230/500] Loss: 0.0009 Acc: [0.847, 0.923, 0.809, 0.809]
+2024-07-01 06:26:57	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [240/500] Loss: 0.0008 Acc: [0.9, 0.9, 0.651, 0.818]
+2024-07-01 06:27:13	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [250/500] Loss: 0.0006 Acc: [0.9, 0.88, 0.694, 0.813]
+2024-07-01 06:27:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [260/500] Loss: 0.0009 Acc: [0.919, 0.914, 0.737, 0.813]
+2024-07-01 06:27:43	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [270/500] Loss: 0.0003 Acc: [0.943, 0.923, 0.732, 0.833]
+2024-07-01 06:27:58	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [280/500] Loss: 0.0000 Acc: [0.928, 0.938, 0.651, 0.813]
+2024-07-01 06:28:13	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [290/500] Loss: 0.0186 Acc: [0.933, 0.856, 0.746, 0.823]
+2024-07-01 06:28:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [300/500] Loss: 0.0000 Acc: [0.943, 0.904, 0.785, 0.785]
+2024-07-01 06:28:44	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [310/500] Loss: 0.0005 Acc: [0.938, 0.895, 0.708, 0.785]
+2024-07-01 06:28:59	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [320/500] Loss: 0.0001 Acc: [0.9, 0.9, 0.785, 0.785]
+2024-07-01 06:29:14	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [330/500] Loss: 0.0000 Acc: [0.919, 0.895, 0.77, 0.799]
+2024-07-01 06:29:29	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [340/500] Loss: 0.0003 Acc: [0.933, 0.952, 0.78, 0.761]
+2024-07-01 06:29:44	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [350/500] Loss: 0.0001 Acc: [0.933, 0.9, 0.785, 0.785]
+2024-07-01 06:29:59	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [360/500] Loss: 0.0000 Acc: [0.947, 0.88, 0.756, 0.818]
+2024-07-01 06:30:15	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [370/500] Loss: 0.0001 Acc: [0.952, 0.895, 0.775, 0.77]
+2024-07-01 06:30:30	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [380/500] Loss: 0.0000 Acc: [0.938, 0.895, 0.679, 0.809]
+2024-07-01 06:30:45	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [390/500] Loss: 0.0000 Acc: [0.895, 0.909, 0.785, 0.809]
+2024-07-01 06:31:01	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [400/500] Loss: 0.0000 Acc: [0.952, 0.943, 0.789, 0.804]
+2024-07-01 06:31:16	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [410/500] Loss: 0.0000 Acc: [0.938, 0.88, 0.766, 0.785]
+2024-07-01 06:31:31	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [420/500] Loss: 0.0000 Acc: [0.938, 0.866, 0.775, 0.77]
+2024-07-01 06:31:46	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [430/500] Loss: 0.0000 Acc: [0.952, 0.89, 0.713, 0.813]
+2024-07-01 06:32:01	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [440/500] Loss: 0.0000 Acc: [0.938, 0.947, 0.785, 0.799]
+2024-07-01 06:32:17	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [450/500] Loss: 0.0000 Acc: [0.909, 0.785, 0.847, 0.722]
+2024-07-01 06:32:32	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [460/500] Loss: 0.0000 Acc: [0.947, 0.9, 0.789, 0.78]
+2024-07-01 06:32:47	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [470/500] Loss: 0.0000 Acc: [0.947, 0.914, 0.785, 0.761]
+2024-07-01 06:33:02	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [480/500] Loss: 0.0000 Acc: [0.947, 0.88, 0.78, 0.751]
+2024-07-01 06:33:17	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [490/500] Loss: 0.0000 Acc: [0.9, 0.909, 0.77, 0.799]
+2024-07-01 06:33:32	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [1] Epoch [500/500] Loss: 0.0000 Acc: [0.938, 0.833, 0.766, 0.751]
+mean acc: 0.7158851
+mean f1: 0.7082779688905141
+Baseline_vanilla_mlp(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Vanilla_Mlp(
+      (tb): ModuleDict(
+        (0): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (1): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (2): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (3): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (maxpool): MaxPool1d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    )
+  )
+)
+2024-07-01 06:33:49	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [010/500] Loss: 1.2616 Acc: [0.589, 0.541, 0.737, 0.378]
+2024-07-01 06:34:04	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [020/500] Loss: 1.1471 Acc: [0.646, 0.55, 0.737, 0.34]
+2024-07-01 06:34:19	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [030/500] Loss: 1.0302 Acc: [0.699, 0.565, 0.737, 0.364]
+2024-07-01 06:34:34	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [040/500] Loss: 0.9429 Acc: [0.699, 0.622, 0.746, 0.455]
+2024-07-01 06:34:49	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [050/500] Loss: 0.8994 Acc: [0.746, 0.656, 0.727, 0.507]
+2024-07-01 06:35:04	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [060/500] Loss: 0.8843 Acc: [0.751, 0.684, 0.746, 0.536]
+2024-07-01 06:35:20	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [070/500] Loss: 0.8709 Acc: [0.756, 0.713, 0.641, 0.589]
+2024-07-01 06:35:35	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [080/500] Loss: 0.7930 Acc: [0.746, 0.718, 0.646, 0.646]
+2024-07-01 06:35:51	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [090/500] Loss: 0.6330 Acc: [0.732, 0.775, 0.522, 0.646]
+2024-07-01 06:36:06	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [100/500] Loss: 0.5926 Acc: [0.746, 0.823, 0.612, 0.722]
+2024-07-01 06:36:21	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [110/500] Loss: 0.3948 Acc: [0.699, 0.837, 0.593, 0.722]
+2024-07-01 06:36:36	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [120/500] Loss: 0.3432 Acc: [0.766, 0.837, 0.617, 0.742]
+2024-07-01 06:36:52	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [130/500] Loss: 0.3405 Acc: [0.837, 0.866, 0.694, 0.751]
+2024-07-01 06:37:07	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [140/500] Loss: 0.2250 Acc: [0.842, 0.866, 0.751, 0.751]
+2024-07-01 06:37:22	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [150/500] Loss: 0.1512 Acc: [0.789, 0.852, 0.718, 0.789]
+2024-07-01 06:37:37	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [160/500] Loss: 0.1514 Acc: [0.904, 0.89, 0.775, 0.785]
+2024-07-01 06:37:52	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [170/500] Loss: 0.0899 Acc: [0.852, 0.914, 0.789, 0.809]
+2024-07-01 06:38:08	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [180/500] Loss: 0.1078 Acc: [0.856, 0.933, 0.804, 0.837]
+2024-07-01 06:38:23	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [190/500] Loss: 0.0563 Acc: [0.852, 0.9, 0.794, 0.823]
+2024-07-01 06:38:38	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [200/500] Loss: 0.0422 Acc: [0.88, 0.928, 0.813, 0.833]
+2024-07-01 06:38:53	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [210/500] Loss: 0.0342 Acc: [0.919, 0.933, 0.818, 0.789]
+2024-07-01 06:39:08	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [220/500] Loss: 0.0354 Acc: [0.962, 0.967, 0.9, 0.775]
+2024-07-01 06:39:24	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [230/500] Loss: 0.0263 Acc: [0.928, 0.9, 0.828, 0.813]
+2024-07-01 06:39:39	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [240/500] Loss: 0.0144 Acc: [0.928, 0.914, 0.88, 0.837]
+2024-07-01 06:39:54	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [250/500] Loss: 0.0060 Acc: [0.928, 0.9, 0.895, 0.856]
+2024-07-01 06:40:09	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [260/500] Loss: 0.0060 Acc: [0.933, 0.904, 0.809, 0.789]
+2024-07-01 06:40:24	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [270/500] Loss: 0.0140 Acc: [0.928, 0.928, 0.847, 0.775]
+2024-07-01 06:40:40	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [280/500] Loss: 0.0060 Acc: [0.933, 0.914, 0.828, 0.761]
+2024-07-01 06:40:55	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [290/500] Loss: 0.0159 Acc: [0.933, 0.952, 0.828, 0.794]
+2024-07-01 06:41:10	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [300/500] Loss: 0.0070 Acc: [0.962, 0.904, 0.842, 0.789]
+2024-07-01 06:41:25	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [310/500] Loss: 0.0038 Acc: [0.928, 0.928, 0.847, 0.856]
+2024-07-01 06:41:40	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [320/500] Loss: 0.0061 Acc: [0.933, 0.928, 0.842, 0.876]
+2024-07-01 06:41:56	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [330/500] Loss: 0.0017 Acc: [0.928, 0.928, 0.833, 0.823]
+2024-07-01 06:42:11	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [340/500] Loss: 0.0097 Acc: [0.923, 0.971, 0.856, 0.837]
+2024-07-01 06:42:26	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [350/500] Loss: 0.0452 Acc: [0.909, 0.799, 0.718, 0.799]
+2024-07-01 06:42:41	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [360/500] Loss: 0.0055 Acc: [0.952, 0.938, 0.871, 0.856]
+2024-07-01 06:42:56	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [370/500] Loss: 0.0018 Acc: [0.928, 0.933, 0.852, 0.842]
+2024-07-01 06:43:11	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [380/500] Loss: 0.0017 Acc: [0.933, 0.933, 0.828, 0.861]
+2024-07-01 06:43:27	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [390/500] Loss: 0.0006 Acc: [0.933, 0.957, 0.866, 0.866]
+2024-07-01 06:43:42	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [400/500] Loss: 0.0010 Acc: [0.914, 0.885, 0.823, 0.833]
+2024-07-01 06:43:57	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [410/500] Loss: 0.0033 Acc: [0.904, 0.933, 0.823, 0.842]
+2024-07-01 06:44:13	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [420/500] Loss: 0.0014 Acc: [0.967, 0.909, 0.833, 0.847]
+2024-07-01 06:44:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [430/500] Loss: 0.0002 Acc: [0.914, 0.914, 0.804, 0.809]
+2024-07-01 06:44:43	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [440/500] Loss: 0.0007 Acc: [0.938, 0.9, 0.809, 0.856]
+2024-07-01 06:44:58	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [450/500] Loss: 0.0005 Acc: [0.957, 0.943, 0.804, 0.852]
+2024-07-01 06:45:13	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [460/500] Loss: 0.0007 Acc: [0.971, 0.923, 0.852, 0.828]
+2024-07-01 06:45:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [470/500] Loss: 0.0006 Acc: [0.947, 0.914, 0.847, 0.885]
+2024-07-01 06:45:44	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [480/500] Loss: 0.0006 Acc: [0.904, 0.938, 0.809, 0.876]
+2024-07-01 06:45:59	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [490/500] Loss: 0.0001 Acc: [0.957, 0.923, 0.804, 0.88]
+2024-07-01 06:46:14	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [2] Epoch [500/500] Loss: 0.0004 Acc: [0.952, 0.947, 0.833, 0.895]
+mean acc: 0.73074955
+mean f1: 0.7229923337684456
+Baseline_vanilla_mlp(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Vanilla_Mlp(
+      (tb): ModuleDict(
+        (0): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (1): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (2): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (3): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (maxpool): MaxPool1d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    )
+  )
+)
+2024-07-01 06:46:30	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [010/500] Loss: 1.2403 Acc: [0.55, 0.569, 0.828, 0.349]
+2024-07-01 06:46:45	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [020/500] Loss: 1.1095 Acc: [0.632, 0.565, 0.828, 0.383]
+2024-07-01 06:47:00	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [030/500] Loss: 1.0048 Acc: [0.665, 0.612, 0.828, 0.455]
+2024-07-01 06:47:15	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [040/500] Loss: 0.9024 Acc: [0.665, 0.632, 0.837, 0.531]
+2024-07-01 06:47:30	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [050/500] Loss: 0.8425 Acc: [0.665, 0.641, 0.847, 0.493]
+2024-07-01 06:47:46	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [060/500] Loss: 0.8094 Acc: [0.742, 0.641, 0.833, 0.555]
+2024-07-01 06:48:01	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [070/500] Loss: 0.8002 Acc: [0.703, 0.684, 0.852, 0.56]
+2024-07-01 06:48:16	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [080/500] Loss: 0.6852 Acc: [0.713, 0.679, 0.737, 0.622]
+2024-07-01 06:48:31	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [090/500] Loss: 0.5747 Acc: [0.713, 0.689, 0.612, 0.622]
+2024-07-01 06:48:46	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [100/500] Loss: 0.4681 Acc: [0.713, 0.708, 0.689, 0.641]
+2024-07-01 06:49:01	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [110/500] Loss: 0.3992 Acc: [0.718, 0.718, 0.727, 0.67]
+2024-07-01 06:49:17	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [120/500] Loss: 0.2934 Acc: [0.727, 0.742, 0.742, 0.67]
+2024-07-01 06:49:32	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [130/500] Loss: 0.2627 Acc: [0.756, 0.746, 0.732, 0.694]
+2024-07-01 06:49:48	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [140/500] Loss: 0.4069 Acc: [0.775, 0.78, 0.842, 0.675]
+2024-07-01 06:50:04	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [150/500] Loss: 0.1846 Acc: [0.742, 0.785, 0.742, 0.718]
+2024-07-01 06:50:19	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [160/500] Loss: 0.1345 Acc: [0.718, 0.766, 0.742, 0.742]
+2024-07-01 06:50:34	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [170/500] Loss: 0.1114 Acc: [0.718, 0.766, 0.737, 0.766]
+2024-07-01 06:50:49	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [180/500] Loss: 0.0954 Acc: [0.713, 0.78, 0.804, 0.766]
+2024-07-01 06:51:05	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [190/500] Loss: 0.1091 Acc: [0.746, 0.775, 0.804, 0.766]
+2024-07-01 06:51:20	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [200/500] Loss: 0.0673 Acc: [0.756, 0.837, 0.78, 0.737]
+2024-07-01 06:51:35	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [210/500] Loss: 0.0395 Acc: [0.722, 0.909, 0.785, 0.756]
+2024-07-01 06:51:50	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [220/500] Loss: 0.0212 Acc: [0.722, 0.818, 0.727, 0.78]
+2024-07-01 06:52:05	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [230/500] Loss: 0.0225 Acc: [0.727, 0.813, 0.761, 0.785]
+2024-07-01 06:52:20	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [240/500] Loss: 0.0235 Acc: [0.775, 0.856, 0.737, 0.756]
+2024-07-01 06:52:36	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [250/500] Loss: 0.0284 Acc: [0.799, 0.852, 0.794, 0.789]
+2024-07-01 06:52:51	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [260/500] Loss: 0.0077 Acc: [0.799, 0.866, 0.789, 0.809]
+2024-07-01 06:53:06	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [270/500] Loss: 0.0070 Acc: [0.785, 0.861, 0.794, 0.77]
+2024-07-01 06:53:21	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [280/500] Loss: 0.0096 Acc: [0.799, 0.866, 0.794, 0.78]
+2024-07-01 06:53:36	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [290/500] Loss: 0.0056 Acc: [0.823, 0.928, 0.847, 0.775]
+2024-07-01 06:53:51	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [300/500] Loss: 0.0031 Acc: [0.842, 0.943, 0.818, 0.828]
+2024-07-01 06:54:07	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [310/500] Loss: 0.0031 Acc: [0.842, 0.928, 0.794, 0.866]
+2024-07-01 06:54:22	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [320/500] Loss: 0.0011 Acc: [0.828, 0.876, 0.804, 0.837]
+2024-07-01 06:54:37	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [330/500] Loss: 0.0036 Acc: [0.847, 0.938, 0.837, 0.794]
+2024-07-01 06:54:52	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [340/500] Loss: 0.0018 Acc: [0.852, 0.923, 0.856, 0.847]
+2024-07-01 06:55:07	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [350/500] Loss: 0.0015 Acc: [0.856, 0.914, 0.794, 0.799]
+2024-07-01 06:55:22	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [360/500] Loss: 0.0035 Acc: [0.842, 0.928, 0.852, 0.833]
+2024-07-01 06:55:37	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [370/500] Loss: 0.0002 Acc: [0.856, 0.943, 0.842, 0.876]
+2024-07-01 06:55:53	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [380/500] Loss: 0.0006 Acc: [0.861, 0.928, 0.833, 0.823]
+2024-07-01 06:56:08	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [390/500] Loss: 0.0011 Acc: [0.842, 0.923, 0.842, 0.885]
+2024-07-01 06:56:23	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [400/500] Loss: 0.0044 Acc: [0.861, 0.933, 0.852, 0.856]
+2024-07-01 06:56:38	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [410/500] Loss: 0.0054 Acc: [0.856, 0.947, 0.856, 0.861]
+2024-07-01 06:56:53	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [420/500] Loss: 0.0022 Acc: [0.876, 0.919, 0.847, 0.866]
+2024-07-01 06:57:08	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [430/500] Loss: 0.0001 Acc: [0.866, 0.914, 0.856, 0.866]
+2024-07-01 06:57:23	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [440/500] Loss: 0.0001 Acc: [0.861, 0.919, 0.828, 0.861]
+2024-07-01 06:57:39	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [450/500] Loss: 0.0001 Acc: [0.861, 0.933, 0.856, 0.866]
+2024-07-01 06:57:55	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [460/500] Loss: 0.0001 Acc: [0.861, 0.923, 0.852, 0.871]
+2024-07-01 06:58:10	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [470/500] Loss: 0.0000 Acc: [0.876, 0.885, 0.852, 0.876]
+2024-07-01 06:58:25	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [480/500] Loss: 0.0009 Acc: [0.871, 0.943, 0.852, 0.88]
+2024-07-01 06:58:41	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [490/500] Loss: 0.0000 Acc: [0.852, 0.923, 0.852, 0.871]
+2024-07-01 06:58:56	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [3] Epoch [500/500] Loss: 0.0005 Acc: [0.885, 0.943, 0.866, 0.847]
+mean acc: 0.734665
+mean f1: 0.7275142463186276
+Baseline_vanilla_mlp(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Vanilla_Mlp(
+      (tb): ModuleDict(
+        (0): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (1): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (2): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+        (3): Conv1dMlp(
+          (conv1): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (act): GELU(approximate='none')
+          (conv2): Conv1d(128, 128, kernel_size=(5,), stride=(1,), padding=(2,))
+          (drop): Dropout(p=0.0, inplace=False)
+        )
+      )
+      (maxpool): MaxPool1d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+    )
+  )
+)
+2024-07-01 06:59:12	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [010/500] Loss: 1.2769 Acc: [0.553, 0.625, 0.692, 0.442]
+2024-07-01 06:59:27	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [020/500] Loss: 1.1652 Acc: [0.683, 0.572, 0.692, 0.49]
+2024-07-01 06:59:42	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [030/500] Loss: 1.0502 Acc: [0.688, 0.639, 0.692, 0.5]
+2024-07-01 06:59:57	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [040/500] Loss: 0.9615 Acc: [0.688, 0.663, 0.692, 0.562]
+2024-07-01 07:00:12	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [050/500] Loss: 0.9065 Acc: [0.688, 0.644, 0.649, 0.567]
+2024-07-01 07:00:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [060/500] Loss: 0.8786 Acc: [0.688, 0.736, 0.663, 0.591]
+2024-07-01 07:00:43	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [070/500] Loss: 0.8294 Acc: [0.712, 0.688, 0.635, 0.587]
+2024-07-01 07:00:58	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [080/500] Loss: 0.8301 Acc: [0.702, 0.779, 0.63, 0.654]
+2024-07-01 07:01:13	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [090/500] Loss: 0.7281 Acc: [0.716, 0.788, 0.659, 0.615]
+2024-07-01 07:01:28	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [100/500] Loss: 0.6612 Acc: [0.74, 0.755, 0.514, 0.688]
+2024-07-01 07:01:43	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [110/500] Loss: 0.5690 Acc: [0.726, 0.764, 0.529, 0.697]
+2024-07-01 07:01:59	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [120/500] Loss: 0.5180 Acc: [0.745, 0.76, 0.553, 0.702]
+2024-07-01 07:02:14	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [130/500] Loss: 0.3817 Acc: [0.745, 0.721, 0.466, 0.692]
+2024-07-01 07:02:29	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [140/500] Loss: 0.2994 Acc: [0.731, 0.76, 0.51, 0.688]
+2024-07-01 07:02:44	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [150/500] Loss: 0.1996 Acc: [0.798, 0.76, 0.659, 0.688]
+2024-07-01 07:02:59	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [160/500] Loss: 0.2676 Acc: [0.683, 0.827, 0.63, 0.692]
+2024-07-01 07:03:14	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [170/500] Loss: 0.1560 Acc: [0.678, 0.712, 0.591, 0.697]
+2024-07-01 07:03:30	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [180/500] Loss: 0.1390 Acc: [0.663, 0.659, 0.567, 0.688]
+2024-07-01 07:03:45	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [190/500] Loss: 0.1051 Acc: [0.731, 0.697, 0.62, 0.707]
+2024-07-01 07:04:00	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [200/500] Loss: 0.1326 Acc: [0.721, 0.813, 0.601, 0.707]
+2024-07-01 07:04:15	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [210/500] Loss: 0.0958 Acc: [0.726, 0.726, 0.591, 0.702]
+2024-07-01 07:04:30	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [220/500] Loss: 0.0697 Acc: [0.707, 0.688, 0.577, 0.745]
+2024-07-01 07:04:46	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [230/500] Loss: 0.0622 Acc: [0.788, 0.827, 0.611, 0.707]
+2024-07-01 07:05:01	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [240/500] Loss: 0.0525 Acc: [0.755, 0.764, 0.601, 0.731]
+2024-07-01 07:05:16	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [250/500] Loss: 0.0232 Acc: [0.798, 0.827, 0.591, 0.702]
+2024-07-01 07:05:31	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [260/500] Loss: 0.0416 Acc: [0.841, 0.822, 0.692, 0.769]
+2024-07-01 07:05:46	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [270/500] Loss: 0.0438 Acc: [0.793, 0.745, 0.591, 0.745]
+2024-07-01 07:06:01	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [280/500] Loss: 0.0409 Acc: [0.865, 0.784, 0.615, 0.769]
+2024-07-01 07:06:16	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [290/500] Loss: 0.0256 Acc: [0.899, 0.784, 0.615, 0.75]
+2024-07-01 07:06:32	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [300/500] Loss: 0.0131 Acc: [0.909, 0.769, 0.659, 0.774]
+2024-07-01 07:06:47	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [310/500] Loss: 0.0195 Acc: [0.899, 0.813, 0.615, 0.779]
+2024-07-01 07:07:02	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [320/500] Loss: 0.0115 Acc: [0.885, 0.755, 0.615, 0.774]
+2024-07-01 07:07:17	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [330/500] Loss: 0.0080 Acc: [0.894, 0.803, 0.611, 0.755]
+2024-07-01 07:07:32	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [340/500] Loss: 0.0073 Acc: [0.865, 0.716, 0.611, 0.712]
+2024-07-01 07:07:48	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [350/500] Loss: 0.0082 Acc: [0.894, 0.784, 0.639, 0.764]
+2024-07-01 07:08:03	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [360/500] Loss: 0.0072 Acc: [0.933, 0.837, 0.625, 0.784]
+2024-07-01 07:08:18	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [370/500] Loss: 0.0059 Acc: [0.899, 0.793, 0.615, 0.745]
+2024-07-01 07:08:33	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [380/500] Loss: 0.0108 Acc: [0.928, 0.861, 0.654, 0.788]
+2024-07-01 07:08:48	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [390/500] Loss: 0.0060 Acc: [0.928, 0.764, 0.663, 0.764]
+2024-07-01 07:09:04	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [400/500] Loss: 0.0042 Acc: [0.933, 0.808, 0.611, 0.784]
+2024-07-01 07:09:19	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [410/500] Loss: 0.0064 Acc: [0.923, 0.87, 0.673, 0.793]
+2024-07-01 07:09:34	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [420/500] Loss: 0.0105 Acc: [0.933, 0.841, 0.663, 0.813]
+2024-07-01 07:09:49	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [430/500] Loss: 0.0022 Acc: [0.933, 0.851, 0.611, 0.769]
+2024-07-01 07:10:04	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [440/500] Loss: 0.0037 Acc: [0.928, 0.875, 0.611, 0.846]
+2024-07-01 07:10:20	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [450/500] Loss: 0.0023 Acc: [0.938, 0.923, 0.625, 0.726]
+2024-07-01 07:10:35	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [460/500] Loss: 0.0017 Acc: [0.933, 0.817, 0.663, 0.813]
+2024-07-01 07:10:50	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [470/500] Loss: 0.0009 Acc: [0.952, 0.803, 0.683, 0.793]
+2024-07-01 07:11:05	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [480/500] Loss: 0.0016 Acc: [0.938, 0.788, 0.668, 0.784]
+2024-07-01 07:11:20	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [490/500] Loss: 0.0045 Acc: [0.938, 0.832, 0.688, 0.779]
+2024-07-01 07:11:36	 Model [<class 'layers.Model.Baseline_vanilla_mlp'>] Fold [4] Epoch [500/500] Loss: 0.0008 Acc: [0.938, 0.822, 0.659, 0.74]
+mean acc: 0.72994363
+mean f1: 0.7220005517099928

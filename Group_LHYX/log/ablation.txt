@@ -1,0 +1,1319 @@
+Args in experiment:
+Namespace(activation='gelu', anomaly_ratio=0.25, batch_size=32, c_out=7, checkpoints='./checkpoints/', d_ff=2048, d_layers=1, d_model=512, data='Ours data', data_path='ETTh1.csv', dec_in=7, depth=4, des='test', devices='0,1,2,3', dim=128, distil=True, dropout=0.1, e_layers=2, embed='timeF', enc_in=7, epochs=500, eval_save_frq=10, factor=1, features='M', freq='h', gpu=0, inverse=False, is_training=1, itr=1, label_len=48, learning_rate=1e-05, loss='MSE', lradj='type1', mask_rate=0.25, model='iTransformer', model_id='test', model_name='Ablation', moving_avg=25, n_heads=8, num_class=4, num_kernels=6, num_workers=10, output_attention=True, p_hidden_dims=[128, 128], p_hidden_layers=2, patience=3, pred_len=96, root_path='./data/ETT/', seasonal_patterns='Monthly', seq_len=300, target='OT', task_name='classification', tasks=[3, 3, 2, 4], top_k=5, train_epochs=10, use_amp=False, use_gpu=False, use_multi_gpu=False)
+
+ <class 'layers.Model.Ablation'>
+Ablation(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Ablation_Blk(
+      (tb): ModuleDict(
+        (0): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (1): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (2): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (3): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+    )
+  )
+)
+2024-07-01 02:27:37	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [010/500] Loss: 1.0511 Acc: [0.689, 0.636, 0.785, 0.507]
+2024-07-01 02:28:30	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [020/500] Loss: 0.8796 Acc: [0.684, 0.675, 0.785, 0.478]
+2024-07-01 02:29:23	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [030/500] Loss: 0.7453 Acc: [0.675, 0.718, 0.737, 0.589]
+2024-07-01 02:30:16	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [040/500] Loss: 0.7404 Acc: [0.722, 0.804, 0.799, 0.622]
+2024-07-01 02:31:09	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [050/500] Loss: 0.5551 Acc: [0.679, 0.818, 0.684, 0.66]
+2024-07-01 02:32:02	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [060/500] Loss: 0.5245 Acc: [0.727, 0.833, 0.766, 0.641]
+2024-07-01 02:32:56	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [070/500] Loss: 0.3711 Acc: [0.742, 0.78, 0.679, 0.589]
+2024-07-01 02:33:49	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [080/500] Loss: 0.2738 Acc: [0.727, 0.799, 0.612, 0.579]
+2024-07-01 02:34:42	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [090/500] Loss: 0.2699 Acc: [0.77, 0.833, 0.675, 0.66]
+2024-07-01 02:35:35	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [100/500] Loss: 0.2386 Acc: [0.761, 0.852, 0.679, 0.675]
+2024-07-01 02:36:28	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [110/500] Loss: 0.2565 Acc: [0.756, 0.89, 0.809, 0.713]
+2024-07-01 02:37:21	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [120/500] Loss: 0.2022 Acc: [0.78, 0.876, 0.871, 0.612]
+2024-07-01 02:38:14	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [130/500] Loss: 0.0476 Acc: [0.809, 0.823, 0.722, 0.689]
+2024-07-01 02:39:07	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [140/500] Loss: 0.1896 Acc: [0.809, 0.904, 0.837, 0.617]
+2024-07-01 02:40:00	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [150/500] Loss: 0.1045 Acc: [0.842, 0.909, 0.928, 0.742]
+2024-07-01 02:40:53	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [160/500] Loss: 0.0366 Acc: [0.842, 0.89, 0.861, 0.689]
+2024-07-01 02:41:46	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [170/500] Loss: 0.0151 Acc: [0.804, 0.88, 0.876, 0.77]
+2024-07-01 02:42:40	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [180/500] Loss: 0.0180 Acc: [0.828, 0.842, 0.852, 0.785]
+2024-07-01 02:43:33	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [190/500] Loss: 0.0114 Acc: [0.837, 0.861, 0.923, 0.718]
+2024-07-01 02:44:26	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [200/500] Loss: 0.0310 Acc: [0.895, 0.9, 0.947, 0.742]
+2024-07-01 02:45:19	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [210/500] Loss: 0.0104 Acc: [0.928, 0.89, 0.928, 0.809]
+2024-07-01 02:46:12	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [220/500] Loss: 0.0055 Acc: [0.962, 0.89, 0.952, 0.789]
+2024-07-01 02:47:05	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [230/500] Loss: 0.0081 Acc: [0.909, 0.909, 0.957, 0.861]
+2024-07-01 02:47:58	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [240/500] Loss: 0.0040 Acc: [0.876, 0.809, 0.947, 0.785]
+2024-07-01 02:48:51	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [250/500] Loss: 0.0054 Acc: [0.89, 0.909, 0.909, 0.885]
+2024-07-01 02:49:45	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [260/500] Loss: 0.0026 Acc: [0.909, 0.9, 0.967, 0.77]
+2024-07-01 02:50:38	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [270/500] Loss: 0.0022 Acc: [0.895, 0.89, 0.976, 0.876]
+2024-07-01 02:51:31	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [280/500] Loss: 0.0013 Acc: [0.856, 0.89, 0.938, 0.871]
+2024-07-01 02:52:24	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [290/500] Loss: 0.0047 Acc: [0.923, 0.828, 0.852, 0.856]
+2024-07-01 02:53:17	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [300/500] Loss: 0.0085 Acc: [0.986, 0.933, 0.957, 0.88]
+2024-07-01 02:54:10	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [310/500] Loss: 0.0026 Acc: [0.962, 0.871, 0.947, 0.794]
+2024-07-01 02:55:03	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [320/500] Loss: 0.0012 Acc: [0.895, 0.876, 0.952, 0.833]
+2024-07-01 02:55:56	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [330/500] Loss: 0.0009 Acc: [0.88, 0.904, 0.919, 0.813]
+2024-07-01 02:56:49	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [340/500] Loss: 0.0511 Acc: [0.818, 0.804, 0.813, 0.818]
+2024-07-01 02:57:42	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [350/500] Loss: 0.0088 Acc: [0.971, 0.909, 0.957, 0.876]
+2024-07-01 02:58:35	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [360/500] Loss: 0.0021 Acc: [0.952, 0.904, 0.971, 0.876]
+2024-07-01 02:59:28	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [370/500] Loss: 0.0016 Acc: [0.933, 0.895, 0.971, 0.871]
+2024-07-01 03:00:21	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [380/500] Loss: 0.0023 Acc: [0.933, 0.885, 0.957, 0.89]
+2024-07-01 03:01:15	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [390/500] Loss: 0.0007 Acc: [0.971, 0.876, 0.976, 0.856]
+2024-07-01 03:02:08	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [400/500] Loss: 0.0005 Acc: [0.957, 0.895, 0.967, 0.852]
+2024-07-01 03:03:01	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [410/500] Loss: 0.0010 Acc: [0.947, 0.89, 0.976, 0.866]
+2024-07-01 03:03:54	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [420/500] Loss: 0.0336 Acc: [0.919, 0.842, 0.852, 0.876]
+2024-07-01 03:04:47	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [430/500] Loss: 0.0004 Acc: [0.943, 0.895, 0.967, 0.89]
+2024-07-01 03:05:40	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [440/500] Loss: 0.0001 Acc: [0.914, 0.9, 0.981, 0.856]
+2024-07-01 03:06:33	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [450/500] Loss: 0.0004 Acc: [0.947, 0.885, 0.981, 0.885]
+2024-07-01 03:07:26	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [460/500] Loss: 0.0001 Acc: [0.957, 0.895, 0.99, 0.842]
+2024-07-01 03:08:19	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [470/500] Loss: 0.0002 Acc: [0.933, 0.895, 0.976, 0.847]
+2024-07-01 03:09:13	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [480/500] Loss: 0.0001 Acc: [0.971, 0.88, 0.971, 0.885]
+2024-07-01 03:10:06	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [490/500] Loss: 0.0002 Acc: [0.952, 0.904, 0.986, 0.909]
+2024-07-01 03:10:59	 Model [<class 'layers.Model.Ablation'>] Fold [0] Epoch [500/500] Loss: 0.0002 Acc: [0.957, 0.89, 0.986, 0.871]
+mean acc: 0.77330136
+mean f1: 0.7685415676710226
+Ablation(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Ablation_Blk(
+      (tb): ModuleDict(
+        (0): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (1): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (2): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (3): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+    )
+  )
+)
+2024-07-01 03:11:53	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [010/500] Loss: 1.1046 Acc: [0.679, 0.641, 0.751, 0.397]
+2024-07-01 03:12:46	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [020/500] Loss: 0.9616 Acc: [0.699, 0.67, 0.756, 0.488]
+2024-07-01 03:13:39	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [030/500] Loss: 0.8467 Acc: [0.703, 0.732, 0.746, 0.526]
+2024-07-01 03:14:32	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [040/500] Loss: 0.7920 Acc: [0.722, 0.775, 0.756, 0.608]
+2024-07-01 03:15:25	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [050/500] Loss: 0.6468 Acc: [0.679, 0.794, 0.742, 0.603]
+2024-07-01 03:16:18	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [060/500] Loss: 0.6043 Acc: [0.713, 0.794, 0.775, 0.665]
+2024-07-01 03:17:11	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [070/500] Loss: 0.4876 Acc: [0.699, 0.823, 0.751, 0.641]
+2024-07-01 03:18:05	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [080/500] Loss: 0.3791 Acc: [0.732, 0.789, 0.617, 0.622]
+2024-07-01 03:18:58	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [090/500] Loss: 0.4029 Acc: [0.727, 0.818, 0.809, 0.689]
+2024-07-01 03:19:51	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [100/500] Loss: 0.2879 Acc: [0.727, 0.842, 0.694, 0.722]
+2024-07-01 03:20:44	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [110/500] Loss: 0.1764 Acc: [0.789, 0.842, 0.732, 0.67]
+2024-07-01 03:21:37	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [120/500] Loss: 0.2169 Acc: [0.799, 0.89, 0.847, 0.627]
+2024-07-01 03:22:30	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [130/500] Loss: 0.1020 Acc: [0.78, 0.871, 0.847, 0.713]
+2024-07-01 03:23:23	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [140/500] Loss: 0.0916 Acc: [0.847, 0.828, 0.852, 0.713]
+2024-07-01 03:24:16	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [150/500] Loss: 0.2466 Acc: [0.823, 0.88, 0.904, 0.742]
+2024-07-01 03:25:09	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [160/500] Loss: 0.0553 Acc: [0.799, 0.876, 0.885, 0.789]
+2024-07-01 03:26:02	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [170/500] Loss: 0.0363 Acc: [0.871, 0.895, 0.957, 0.789]
+2024-07-01 03:26:55	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [180/500] Loss: 0.0202 Acc: [0.871, 0.861, 0.971, 0.804]
+2024-07-01 03:27:49	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [190/500] Loss: 0.0429 Acc: [0.895, 0.856, 0.842, 0.799]
+2024-07-01 03:28:42	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [200/500] Loss: 0.0125 Acc: [0.895, 0.895, 0.947, 0.785]
+2024-07-01 03:29:35	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [210/500] Loss: 0.0068 Acc: [0.923, 0.89, 0.976, 0.77]
+2024-07-01 03:30:28	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [220/500] Loss: 0.0040 Acc: [0.914, 0.852, 0.938, 0.842]
+2024-07-01 03:31:21	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [230/500] Loss: 0.0015 Acc: [0.919, 0.909, 0.89, 0.823]
+2024-07-01 03:32:14	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [240/500] Loss: 0.0055 Acc: [0.919, 0.895, 0.89, 0.88]
+2024-07-01 03:33:07	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [250/500] Loss: 0.0273 Acc: [0.928, 0.799, 0.933, 0.789]
+2024-07-01 03:34:00	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [260/500] Loss: 0.0017 Acc: [0.923, 0.914, 0.976, 0.823]
+2024-07-01 03:34:53	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [270/500] Loss: 0.0016 Acc: [0.928, 0.909, 0.967, 0.89]
+2024-07-01 03:35:46	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [280/500] Loss: 0.0007 Acc: [0.923, 0.9, 0.976, 0.876]
+2024-07-01 03:36:39	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [290/500] Loss: 0.0026 Acc: [0.938, 0.89, 0.938, 0.885]
+2024-07-01 03:37:32	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [300/500] Loss: 0.0223 Acc: [0.895, 0.909, 0.823, 0.823]
+2024-07-01 03:38:26	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [310/500] Loss: 0.0010 Acc: [0.943, 0.914, 0.986, 0.871]
+2024-07-01 03:39:19	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [320/500] Loss: 0.0011 Acc: [0.947, 0.909, 0.981, 0.876]
+2024-07-01 03:40:12	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [330/500] Loss: 0.0135 Acc: [0.962, 0.919, 0.799, 0.852]
+2024-07-01 03:41:05	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [340/500] Loss: 0.0004 Acc: [0.957, 0.933, 0.938, 0.88]
+2024-07-01 03:41:58	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [350/500] Loss: 0.0028 Acc: [0.957, 0.952, 0.842, 0.89]
+2024-07-01 03:42:51	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [360/500] Loss: 0.0005 Acc: [0.962, 0.962, 0.971, 0.89]
+2024-07-01 03:43:44	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [370/500] Loss: 0.0004 Acc: [0.967, 0.957, 0.962, 0.866]
+2024-07-01 03:44:37	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [380/500] Loss: 0.0001 Acc: [0.967, 0.856, 0.947, 0.866]
+2024-07-01 03:45:30	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [390/500] Loss: 0.0026 Acc: [0.957, 0.962, 0.947, 0.885]
+2024-07-01 03:46:23	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [400/500] Loss: 0.0004 Acc: [0.971, 0.957, 0.957, 0.9]
+2024-07-01 03:47:16	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [410/500] Loss: 0.0004 Acc: [0.976, 0.962, 0.971, 0.89]
+2024-07-01 03:48:10	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [420/500] Loss: 0.0003 Acc: [0.976, 0.967, 0.923, 0.885]
+2024-07-01 03:49:03	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [430/500] Loss: 0.0003 Acc: [0.967, 0.962, 0.976, 0.895]
+2024-07-01 03:49:56	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [440/500] Loss: 0.0003 Acc: [0.981, 0.952, 0.981, 0.856]
+2024-07-01 03:50:49	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [450/500] Loss: 0.0001 Acc: [0.99, 0.957, 0.962, 0.866]
+2024-07-01 03:51:42	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [460/500] Loss: 0.0007 Acc: [0.971, 0.962, 0.981, 0.88]
+2024-07-01 03:52:35	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [470/500] Loss: 0.0020 Acc: [0.971, 0.967, 0.971, 0.9]
+2024-07-01 03:53:28	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [480/500] Loss: 0.0002 Acc: [0.976, 0.967, 0.971, 0.9]
+2024-07-01 03:54:21	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [490/500] Loss: 0.0000 Acc: [0.99, 0.962, 0.981, 0.895]
+2024-07-01 03:55:15	 Model [<class 'layers.Model.Ablation'>] Fold [1] Epoch [500/500] Loss: 0.0007 Acc: [0.986, 0.861, 0.923, 0.833]
+mean acc: 0.78033483
+mean f1: 0.7785354688475666
+Ablation(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Ablation_Blk(
+      (tb): ModuleDict(
+        (0): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (1): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (2): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (3): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+    )
+  )
+)
+2024-07-01 03:56:09	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [010/500] Loss: 1.0247 Acc: [0.67, 0.603, 0.737, 0.474]
+2024-07-01 03:57:02	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [020/500] Loss: 0.8691 Acc: [0.665, 0.651, 0.761, 0.565]
+2024-07-01 03:57:55	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [030/500] Loss: 0.7724 Acc: [0.689, 0.66, 0.727, 0.598]
+2024-07-01 03:58:48	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [040/500] Loss: 0.7199 Acc: [0.699, 0.66, 0.756, 0.612]
+2024-07-01 03:59:41	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [050/500] Loss: 0.6128 Acc: [0.703, 0.732, 0.732, 0.617]
+2024-07-01 04:00:34	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [060/500] Loss: 0.5818 Acc: [0.727, 0.722, 0.727, 0.622]
+2024-07-01 04:01:27	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [070/500] Loss: 0.5814 Acc: [0.761, 0.813, 0.746, 0.641]
+2024-07-01 04:02:20	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [080/500] Loss: 0.5400 Acc: [0.722, 0.756, 0.746, 0.679]
+2024-07-01 04:03:13	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [090/500] Loss: 0.5195 Acc: [0.756, 0.799, 0.789, 0.641]
+2024-07-01 04:04:06	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [100/500] Loss: 0.3384 Acc: [0.77, 0.837, 0.77, 0.646]
+2024-07-01 04:05:00	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [110/500] Loss: 0.3328 Acc: [0.813, 0.809, 0.794, 0.651]
+2024-07-01 04:05:53	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [120/500] Loss: 0.2747 Acc: [0.789, 0.852, 0.813, 0.632]
+2024-07-01 04:06:46	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [130/500] Loss: 0.2361 Acc: [0.799, 0.842, 0.876, 0.694]
+2024-07-01 04:07:39	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [140/500] Loss: 0.1345 Acc: [0.833, 0.9, 0.856, 0.651]
+2024-07-01 04:08:32	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [150/500] Loss: 0.1591 Acc: [0.789, 0.876, 0.876, 0.622]
+2024-07-01 04:09:25	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [160/500] Loss: 0.0457 Acc: [0.88, 0.866, 0.833, 0.756]
+2024-07-01 04:10:18	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [170/500] Loss: 0.0330 Acc: [0.852, 0.914, 0.818, 0.794]
+2024-07-01 04:11:11	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [180/500] Loss: 0.0266 Acc: [0.823, 0.885, 0.923, 0.722]
+2024-07-01 04:12:04	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [190/500] Loss: 0.0239 Acc: [0.943, 0.904, 0.928, 0.833]
+2024-07-01 04:12:57	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [200/500] Loss: 0.0263 Acc: [0.909, 0.885, 0.904, 0.713]
+2024-07-01 04:13:50	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [210/500] Loss: 0.0382 Acc: [0.928, 0.971, 0.962, 0.88]
+2024-07-01 04:14:43	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [220/500] Loss: 0.0121 Acc: [0.938, 0.938, 0.943, 0.842]
+2024-07-01 04:15:37	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [230/500] Loss: 0.0050 Acc: [0.938, 0.933, 0.938, 0.885]
+2024-07-01 04:16:30	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [240/500] Loss: 0.0076 Acc: [0.976, 0.866, 0.923, 0.852]
+2024-07-01 04:17:23	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [250/500] Loss: 0.0079 Acc: [0.947, 0.981, 0.947, 0.895]
+2024-07-01 04:18:16	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [260/500] Loss: 0.0022 Acc: [0.986, 0.981, 0.952, 0.9]
+2024-07-01 04:19:09	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [270/500] Loss: 0.0067 Acc: [0.923, 0.89, 0.847, 0.823]
+2024-07-01 04:20:02	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [280/500] Loss: 0.0026 Acc: [0.986, 0.986, 0.981, 0.9]
+2024-07-01 04:20:55	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [290/500] Loss: 0.0094 Acc: [0.971, 0.981, 0.923, 0.89]
+2024-07-01 04:21:48	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [300/500] Loss: 0.2365 Acc: [0.971, 0.986, 0.943, 0.904]
+2024-07-01 04:22:41	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [310/500] Loss: 0.0019 Acc: [0.99, 0.99, 0.981, 0.89]
+2024-07-01 04:23:34	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [320/500] Loss: 0.0008 Acc: [0.986, 0.986, 0.981, 0.9]
+2024-07-01 04:24:27	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [330/500] Loss: 0.0036 Acc: [0.986, 0.947, 0.986, 0.88]
+2024-07-01 04:25:21	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [340/500] Loss: 0.0308 Acc: [0.919, 0.828, 0.861, 0.895]
+2024-07-01 04:26:14	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [350/500] Loss: 0.0010 Acc: [0.986, 0.957, 0.986, 0.895]
+2024-07-01 04:27:07	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [360/500] Loss: 0.0003 Acc: [0.99, 0.957, 0.986, 0.895]
+2024-07-01 04:28:00	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [370/500] Loss: 0.0003 Acc: [0.99, 0.99, 0.986, 0.866]
+2024-07-01 04:28:53	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [380/500] Loss: 0.0001 Acc: [0.99, 0.947, 0.986, 0.885]
+2024-07-01 04:29:46	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [390/500] Loss: 0.0002 Acc: [0.99, 0.962, 0.981, 0.88]
+2024-07-01 04:30:39	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [400/500] Loss: 0.0095 Acc: [0.986, 0.957, 0.981, 0.885]
+2024-07-01 04:31:32	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [410/500] Loss: 0.0001 Acc: [0.99, 0.99, 0.995, 0.89]
+2024-07-01 04:32:25	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [420/500] Loss: 0.0004 Acc: [0.986, 0.99, 0.99, 0.914]
+2024-07-01 04:33:18	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [430/500] Loss: 0.0014 Acc: [0.943, 0.99, 0.981, 0.909]
+2024-07-01 04:34:11	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [440/500] Loss: 0.0003 Acc: [0.986, 0.99, 0.986, 0.9]
+2024-07-01 04:35:05	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [450/500] Loss: 0.0005 Acc: [0.99, 0.99, 0.986, 0.943]
+2024-07-01 04:35:58	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [460/500] Loss: 0.0005 Acc: [0.99, 0.99, 0.99, 0.923]
+2024-07-01 04:36:51	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [470/500] Loss: 0.0002 Acc: [0.99, 0.99, 0.986, 0.885]
+2024-07-01 04:37:44	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [480/500] Loss: 0.0002 Acc: [0.99, 0.986, 0.99, 0.876]
+2024-07-01 04:38:37	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [490/500] Loss: 0.0003 Acc: [0.986, 0.99, 0.986, 0.909]
+2024-07-01 04:39:30	 Model [<class 'layers.Model.Ablation'>] Fold [2] Epoch [500/500] Loss: 0.0002 Acc: [0.99, 0.99, 0.986, 0.88]
+mean acc: 0.7857735
+mean f1: 0.7834823189544293
+Ablation(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Ablation_Blk(
+      (tb): ModuleDict(
+        (0): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (1): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (2): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (3): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+    )
+  )
+)
+2024-07-01 04:40:24	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [010/500] Loss: 1.1227 Acc: [0.675, 0.555, 0.775, 0.45]
+2024-07-01 04:41:17	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [020/500] Loss: 0.9627 Acc: [0.689, 0.617, 0.78, 0.493]
+2024-07-01 04:42:10	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [030/500] Loss: 0.8676 Acc: [0.703, 0.761, 0.809, 0.517]
+2024-07-01 04:43:03	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [040/500] Loss: 0.7247 Acc: [0.77, 0.746, 0.78, 0.555]
+2024-07-01 04:43:56	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [050/500] Loss: 0.6578 Acc: [0.742, 0.804, 0.804, 0.555]
+2024-07-01 04:44:49	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [060/500] Loss: 0.5349 Acc: [0.77, 0.804, 0.88, 0.565]
+2024-07-01 04:45:43	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [070/500] Loss: 0.5621 Acc: [0.809, 0.804, 0.914, 0.574]
+2024-07-01 04:46:36	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [080/500] Loss: 0.3655 Acc: [0.785, 0.809, 0.837, 0.56]
+2024-07-01 04:47:29	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [090/500] Loss: 0.4230 Acc: [0.799, 0.828, 0.876, 0.584]
+2024-07-01 04:48:23	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [100/500] Loss: 0.2519 Acc: [0.813, 0.833, 0.799, 0.622]
+2024-07-01 04:49:16	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [110/500] Loss: 0.2221 Acc: [0.852, 0.909, 0.876, 0.646]
+2024-07-01 04:50:09	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [120/500] Loss: 0.2624 Acc: [0.828, 0.847, 0.861, 0.665]
+2024-07-01 04:51:02	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [130/500] Loss: 0.1461 Acc: [0.866, 0.89, 0.962, 0.746]
+2024-07-01 04:51:55	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [140/500] Loss: 0.1954 Acc: [0.9, 0.871, 0.909, 0.694]
+2024-07-01 04:52:48	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [150/500] Loss: 0.1048 Acc: [0.89, 0.933, 0.928, 0.722]
+2024-07-01 04:53:41	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [160/500] Loss: 0.0603 Acc: [0.904, 0.914, 0.914, 0.732]
+2024-07-01 04:54:34	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [170/500] Loss: 0.0455 Acc: [0.923, 0.885, 0.962, 0.804]
+2024-07-01 04:55:27	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [180/500] Loss: 0.1347 Acc: [0.909, 0.957, 0.756, 0.813]
+2024-07-01 04:56:20	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [190/500] Loss: 0.0156 Acc: [0.928, 0.847, 0.986, 0.809]
+2024-07-01 04:57:13	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [200/500] Loss: 0.0219 Acc: [0.947, 0.9, 0.971, 0.785]
+2024-07-01 04:58:06	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [210/500] Loss: 0.0134 Acc: [0.952, 0.919, 0.967, 0.794]
+2024-07-01 04:59:00	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [220/500] Loss: 0.0083 Acc: [0.943, 0.866, 0.962, 0.785]
+2024-07-01 04:59:53	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [230/500] Loss: 0.0032 Acc: [0.947, 0.938, 0.971, 0.756]
+2024-07-01 05:00:46	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [240/500] Loss: 0.0684 Acc: [0.947, 0.943, 0.947, 0.856]
+2024-07-01 05:01:39	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [250/500] Loss: 0.0035 Acc: [0.967, 0.919, 0.962, 0.871]
+2024-07-01 05:02:32	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [260/500] Loss: 0.0024 Acc: [0.967, 0.914, 0.971, 0.89]
+2024-07-01 05:03:25	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [270/500] Loss: 0.0048 Acc: [0.967, 0.914, 0.962, 0.856]
+2024-07-01 05:04:18	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [280/500] Loss: 0.0031 Acc: [0.962, 0.904, 0.962, 0.9]
+2024-07-01 05:05:11	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [290/500] Loss: 0.0012 Acc: [0.967, 0.957, 0.986, 0.823]
+2024-07-01 05:06:05	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [300/500] Loss: 0.0631 Acc: [0.976, 0.938, 0.99, 0.914]
+2024-07-01 05:06:58	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [310/500] Loss: 0.0043 Acc: [0.981, 0.933, 0.986, 0.9]
+2024-07-01 05:07:51	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [320/500] Loss: 0.0029 Acc: [0.971, 0.943, 0.947, 0.909]
+2024-07-01 05:08:44	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [330/500] Loss: 0.0006 Acc: [0.957, 0.967, 0.995, 0.847]
+2024-07-01 05:09:37	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [340/500] Loss: 0.0006 Acc: [0.957, 0.952, 0.99, 0.89]
+2024-07-01 05:10:30	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [350/500] Loss: 0.0065 Acc: [0.99, 0.933, 0.976, 0.885]
+2024-07-01 05:11:23	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [360/500] Loss: 0.0020 Acc: [0.986, 0.957, 0.99, 0.923]
+2024-07-01 05:12:16	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [370/500] Loss: 0.0114 Acc: [0.981, 0.952, 0.928, 0.89]
+2024-07-01 05:13:09	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [380/500] Loss: 0.0029 Acc: [0.981, 0.933, 0.99, 0.904]
+2024-07-01 05:14:02	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [390/500] Loss: 0.0007 Acc: [0.971, 0.962, 0.99, 0.914]
+2024-07-01 05:14:55	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [400/500] Loss: 0.0018 Acc: [0.986, 0.957, 0.981, 0.923]
+2024-07-01 05:15:49	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [410/500] Loss: 0.0003 Acc: [0.976, 0.962, 0.976, 0.923]
+2024-07-01 05:16:42	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [420/500] Loss: 0.0048 Acc: [0.986, 0.957, 0.981, 0.928]
+2024-07-01 05:17:35	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [430/500] Loss: 0.0003 Acc: [0.971, 0.947, 0.995, 0.9]
+2024-07-01 05:18:28	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [440/500] Loss: 0.0001 Acc: [0.971, 0.962, 0.995, 0.928]
+2024-07-01 05:19:21	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [450/500] Loss: 0.0002 Acc: [0.986, 0.957, 0.99, 0.923]
+2024-07-01 05:20:14	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [460/500] Loss: 0.0001 Acc: [0.971, 0.952, 0.995, 0.919]
+2024-07-01 05:21:07	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [470/500] Loss: 0.0092 Acc: [0.976, 0.957, 0.976, 0.876]
+2024-07-01 05:22:00	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [480/500] Loss: 0.0004 Acc: [0.976, 0.952, 0.995, 0.919]
+2024-07-01 05:22:53	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [490/500] Loss: 0.0002 Acc: [0.976, 0.962, 0.99, 0.909]
+2024-07-01 05:23:46	 Model [<class 'layers.Model.Ablation'>] Fold [3] Epoch [500/500] Loss: 0.0001 Acc: [0.986, 0.943, 0.99, 0.923]
+mean acc: 0.78667456
+mean f1: 0.7848568095237717
+Ablation(
+  (enc_embedding): DataEmbedding_inverted(
+    (value_embedding): Linear(in_features=300, out_features=512, bias=True)
+    (dropout): Dropout(p=0.1, inplace=False)
+  )
+  (encoder): Encoder(
+    (attn_layers): ModuleList(
+      (0-1): 2 x EncoderLayer(
+        (attention): AttentionLayer(
+          (inner_attention): FullAttention(
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (query_projection): Linear(in_features=512, out_features=512, bias=True)
+          (key_projection): Linear(in_features=512, out_features=512, bias=True)
+          (value_projection): Linear(in_features=512, out_features=512, bias=True)
+          (out_projection): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (conv1): Conv1d(512, 2048, kernel_size=(1,), stride=(1,))
+        (conv2): Conv1d(2048, 512, kernel_size=(1,), stride=(1,))
+        (norm1): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (norm2): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+  )
+  (proj): Linear(in_features=512, out_features=128, bias=True)
+  (cls_tokens): ParameterDict(
+      (0): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (1): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (2): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (3): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+      (4): Parameter containing: [torch.cuda.FloatTensor of size 1x1x128 (GPU 0)]
+  )
+  (task_heads): ModuleDict(
+    (0): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (1): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=3, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (2): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=2, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+    (3): Mlp(
+      (fc1): Linear(in_features=128, out_features=128, bias=True)
+      (act): GELU(approximate='none')
+      (fc2): Linear(in_features=128, out_features=4, bias=True)
+      (drop): Dropout(p=0.0, inplace=False)
+    )
+  )
+  (our_blks): ModuleList(
+    (0-3): 4 x Ablation_Blk(
+      (tb): ModuleDict(
+        (0): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (1): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (2): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+        (3): ModuleDict(
+          (sa): SA(
+            (ln1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (sa): SelfAttention(
+              (qkv): Linear(in_features=128, out_features=384, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+          (ca): CA(
+            (ln1_x): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ln1_y): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (ca): CrossAttention(
+              (kv): Linear(in_features=128, out_features=256, bias=False)
+              (q): Linear(in_features=128, out_features=128, bias=False)
+              (attn_drop): Dropout(p=0.0, inplace=False)
+              (proj): Linear(in_features=128, out_features=128, bias=True)
+              (proj_drop): Dropout(p=0.0, inplace=False)
+            )
+            (ln2): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+            (mlp): Mlp(
+              (fc1): Linear(in_features=128, out_features=128, bias=True)
+              (act): GELU(approximate='none')
+              (fc2): Linear(in_features=128, out_features=128, bias=True)
+              (drop): Dropout(p=0.0, inplace=False)
+            )
+          )
+        )
+      )
+    )
+  )
+)
+2024-07-01 05:24:40	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [010/500] Loss: 1.1330 Acc: [0.668, 0.606, 0.745, 0.428]
+2024-07-01 05:25:33	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [020/500] Loss: 0.9384 Acc: [0.683, 0.654, 0.76, 0.466]
+2024-07-01 05:26:26	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [030/500] Loss: 0.8612 Acc: [0.663, 0.707, 0.769, 0.558]
+2024-07-01 05:27:19	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [040/500] Loss: 0.7750 Acc: [0.668, 0.74, 0.736, 0.538]
+2024-07-01 05:28:13	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [050/500] Loss: 0.5530 Acc: [0.673, 0.784, 0.716, 0.639]
+2024-07-01 05:29:06	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [060/500] Loss: 0.5246 Acc: [0.663, 0.774, 0.75, 0.659]
+2024-07-01 05:29:59	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [070/500] Loss: 0.4473 Acc: [0.683, 0.74, 0.793, 0.654]
+2024-07-01 05:30:52	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [080/500] Loss: 0.3882 Acc: [0.702, 0.76, 0.798, 0.692]
+2024-07-01 05:31:45	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [090/500] Loss: 0.3351 Acc: [0.716, 0.861, 0.813, 0.697]
+2024-07-01 05:32:38	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [100/500] Loss: 0.2659 Acc: [0.788, 0.885, 0.837, 0.712]
+2024-07-01 05:33:31	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [110/500] Loss: 0.2775 Acc: [0.793, 0.808, 0.832, 0.788]
+2024-07-01 05:34:24	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [120/500] Loss: 0.1971 Acc: [0.779, 0.798, 0.837, 0.817]
+2024-07-01 05:35:17	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [130/500] Loss: 0.1448 Acc: [0.813, 0.817, 0.875, 0.74]
+2024-07-01 05:36:10	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [140/500] Loss: 0.0836 Acc: [0.716, 0.865, 0.875, 0.745]
+2024-07-01 05:37:04	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [150/500] Loss: 0.1207 Acc: [0.808, 0.793, 0.846, 0.649]
+2024-07-01 05:37:57	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [160/500] Loss: 0.0786 Acc: [0.885, 0.856, 0.808, 0.688]
+2024-07-01 05:38:50	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [170/500] Loss: 0.0469 Acc: [0.813, 0.851, 0.851, 0.827]
+2024-07-01 05:39:43	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [180/500] Loss: 0.0333 Acc: [0.904, 0.923, 0.88, 0.861]
+2024-07-01 05:40:36	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [190/500] Loss: 0.2018 Acc: [0.851, 0.851, 0.721, 0.832]
+2024-07-01 05:41:30	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [200/500] Loss: 0.0490 Acc: [0.933, 0.851, 0.923, 0.803]
+2024-07-01 05:42:23	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [210/500] Loss: 0.0057 Acc: [0.923, 0.928, 0.933, 0.889]
+2024-07-01 05:43:16	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [220/500] Loss: 0.0036 Acc: [0.928, 0.928, 0.933, 0.865]
+2024-07-01 05:44:09	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [230/500] Loss: 0.0063 Acc: [0.923, 0.962, 0.885, 0.899]
+2024-07-01 05:45:02	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [240/500] Loss: 0.0405 Acc: [0.942, 0.909, 0.962, 0.87]
+2024-07-01 05:45:55	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [250/500] Loss: 0.0014 Acc: [0.938, 0.952, 0.856, 0.913]
+2024-07-01 05:46:48	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [260/500] Loss: 0.0017 Acc: [0.952, 0.918, 0.909, 0.904]
+2024-07-01 05:47:41	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [270/500] Loss: 0.0029 Acc: [0.957, 0.952, 0.952, 0.889]
+2024-07-01 05:48:35	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [280/500] Loss: 0.0086 Acc: [0.952, 0.952, 0.957, 0.899]
+2024-07-01 05:49:28	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [290/500] Loss: 0.0474 Acc: [0.918, 0.909, 0.87, 0.813]
+2024-07-01 05:50:21	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [300/500] Loss: 0.0046 Acc: [0.966, 0.952, 0.962, 0.904]
+2024-07-01 05:51:14	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [310/500] Loss: 0.0019 Acc: [0.976, 0.918, 0.933, 0.865]
+2024-07-01 05:52:07	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [320/500] Loss: 0.0103 Acc: [0.966, 0.938, 0.913, 0.87]
+2024-07-01 05:53:00	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [330/500] Loss: 0.0062 Acc: [0.962, 0.942, 0.923, 0.894]
+2024-07-01 05:53:53	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [340/500] Loss: 0.0008 Acc: [0.966, 0.947, 0.928, 0.889]
+2024-07-01 05:54:46	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [350/500] Loss: 0.0024 Acc: [0.976, 0.952, 0.971, 0.861]
+2024-07-01 05:55:40	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [360/500] Loss: 0.0014 Acc: [0.976, 0.942, 0.986, 0.904]
+2024-07-01 05:56:33	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [370/500] Loss: 0.0117 Acc: [0.971, 0.899, 0.837, 0.875]
+2024-07-01 05:57:26	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [380/500] Loss: 0.0027 Acc: [0.976, 0.947, 0.981, 0.923]
+2024-07-01 05:58:19	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [390/500] Loss: 0.0016 Acc: [0.966, 0.913, 0.986, 0.899]
+2024-07-01 05:59:12	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [400/500] Loss: 0.0005 Acc: [0.981, 0.942, 0.976, 0.899]
+2024-07-01 06:00:05	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [410/500] Loss: 0.0004 Acc: [0.981, 0.952, 0.976, 0.918]
+2024-07-01 06:00:58	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [420/500] Loss: 0.0046 Acc: [0.933, 0.933, 0.88, 0.856]
+2024-07-01 06:01:51	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [430/500] Loss: 0.0005 Acc: [0.981, 0.947, 0.952, 0.918]
+2024-07-01 06:02:44	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [440/500] Loss: 0.0066 Acc: [0.981, 0.947, 0.99, 0.904]
+2024-07-01 06:03:38	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [450/500] Loss: 0.0004 Acc: [0.981, 0.947, 0.986, 0.904]
+2024-07-01 06:04:31	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [460/500] Loss: 0.0050 Acc: [0.986, 0.947, 0.99, 0.913]
+2024-07-01 06:05:24	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [470/500] Loss: 0.0007 Acc: [0.986, 0.889, 0.981, 0.885]
+2024-07-01 06:06:17	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [480/500] Loss: 0.0009 Acc: [0.986, 0.942, 0.981, 0.885]
+2024-07-01 06:07:10	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [490/500] Loss: 0.0001 Acc: [0.986, 0.942, 0.986, 0.918]
+2024-07-01 06:08:03	 Model [<class 'layers.Model.Ablation'>] Fold [4] Epoch [500/500] Loss: 0.0004 Acc: [0.971, 0.947, 0.928, 0.899]
+mean acc: 0.79141665
+mean f1: 0.7897759189012824

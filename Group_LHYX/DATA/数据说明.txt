@@ -1,0 +1,23 @@
+au: action units
+em: eye movement
+hp: head posture
+hr: heart rate
+
+quality: 接管质量，分为三个等级（好0，中1，差2）
+ra: reaction time 接管时间，分为三个等级（快0，中1，慢2）
+readiness: 是否准备好接管，两个等级（是1，否0）
+
+real_va.xlsx文件：
+1、含有240条数据，即20人*4种情绪*每种情绪3次实验=240
+2、预期诱发情绪见第一列标签
+3、真实valence和arousal值（由参与者自我评分而来）见第四、第五列
+4、valence和arousal级别为1-9，其中5为中间值，对应到va坐标系中落在坐标轴上（即，x=0或y=0），这种数据不能用于计算，应当排除
+5、va值在换算时直接减5即可
+6、HAPV-(a>0, v>0)-happy     HANV-(a>0, v<0)-fear
+     LAPV-(a<0, v>0)-relief         LANV-(a<0, v<0)-bored
+7、经处理后的标签值共计195条，与数据数目相对应
+
+.npy文件：
+1、au、hp、em使用openface2.0提取，详细内容可以参考openface github
+2、bp使用openpose提取，只包含上半身12个关键点（到手腕/手肘为止），详细内容参考openpose github
+3、每个.npy文件维度为（195*具体数据维度*300），300即接管前10s*30Hz=300帧数据
