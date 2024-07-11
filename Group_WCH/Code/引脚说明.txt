@@ -1,0 +1,16 @@
+1. CH340     -->	STM32
+    TXD	    -->	A10
+    RXD	   -->	A9
+
+2. 蜂鸣器	   -->	STM32
+    5V	   -->	5V
+    GND	   -->	GND
+    IO	   -->	A0,A1,A5,A6
+
+3. 继电器     -->	STM32（高电平触发）
+    IN1	   -->	B8
+    IN2	   -->	B9
+    IN3	   -->	B10
+    IN4	   -->	B11
+
+数据包格式： 0xff 距离 0xfe 0xfd 角度 0xfc
